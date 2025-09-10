@@ -13,7 +13,6 @@ const productSchema = new mongoose.Schema(
     mrp: { type: Number },
     category: { type: String, required: true },
     stock: { type: Number, required: true, default: 0 },
-    image: ,
     images: [{ type: String }], // Array of image URLs
     tags: [{ type: String }],
     specifications: [
