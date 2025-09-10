@@ -18,7 +18,7 @@ import WishlistPage from './pages/public/WishlistPage';
 import CheckoutPage from './pages/public/CheckoutPage'; 
 import OrderHistoryPage from './pages/user/OrderHistoryPage';
 import CustomerProtectedRoute from './routes/CustomerProtectedRoute'; 
-
+import CategoryPage from './pages/public/CategoryPage';
 import AdminEditProductPage from './pages/admin/AdminEditProductPage'; 
 import AdminAddProductPage from './pages/admin/AdminAddProductPage';
 
@@ -30,7 +30,8 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: 'products/:productId', element: <ProductDetailPage /> },
+  { path: 'category/:categoryName', element: <CategoryPage /> }, // ADD THIS NEW ROUTE
+  { path: 'products/:productId', element: <ProductDetailPage /> },
       { path: 'cart', element: <CartPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
