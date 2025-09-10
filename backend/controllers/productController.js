@@ -7,9 +7,21 @@ import Product from '../models/Product.js';
  * @route   GET /api/products
  * @access  Public
  */
+// Inside getAllProducts function
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find({}); // find({}) gets all documents
+    // Check if a 'category' query parameter exists
+    const keyword = req.query.category
+      ? {
+          category: {
+            $regex: req.query.category, // Use regex for flexible matching
+            $options: 'i', // 'i' for case-insensitive
+          },
+        }
+      : {}; // If no category, the keyword is an empty object
+
+    // Pass the keyword object to the find method
+    const products = await Product.find({ ...keyword });
     res.json(products);
   } catch (error) {
     console.error(error);
