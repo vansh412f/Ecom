@@ -60,20 +60,21 @@ const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
           </div>
 
           {/* Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
-            <a href="#" className="text-white hover:text-[var(--accent)] transition-colors duration-300 font-medium">
-              Refrigerators
-            </a>
-            <a href="#" className="text-white hover:text-[var(--accent)] transition-colors duration-300 font-medium">
-              TVs & Audio
-            </a>
-            <a href="#" className="text-white hover:text-[var(--accent)] transition-colors duration-300 font-medium">
-              Air Conditioners
-            </a>
-            <a href="#" className="text-white hover:text-[var(--accent)] transition-colors duration-300 font-medium">
-              Laundry
-            </a>
-          </nav>
+          {/* Navigation */}
+<nav className="hidden lg:flex items-center space-x-8">
+  <Link to="/category/Refrigerators" className="text-white hover:text-[var(--accent)] transition-colors duration-300 font-medium">
+    Refrigerators
+  </Link>
+  <Link to="/category/TVs" className="text-white hover:text-[var(--accent)] transition-colors duration-300 font-medium">
+    TVs & Audio
+  </Link>
+  <Link to="/category/Air Conditioners" className="text-white hover:text-[var(--accent)] transition-colors duration-300 font-medium">
+    Air Conditioners
+  </Link>
+  <Link to="/category/Washers" className="text-white hover:text-[var(--accent)] transition-colors duration-300 font-medium">
+    Laundry
+  </Link>
+</nav>
 
           {/* Search Bar */}
           <div className="hidden md:flex relative w-80">
