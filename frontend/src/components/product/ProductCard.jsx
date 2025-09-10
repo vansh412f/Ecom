@@ -3,12 +3,13 @@ import React from 'react';
 import { Link } from 'react-router-dom'; 
 import { ShoppingCart, Eye, Star, Truck, Zap } from 'lucide-react';
 import useCartStore from '../../state/cartStore';
+
 function ProductCard(product) { // 2. Receive the whole product object as a prop
-  const { id, image, name, brand, price, originalPrice, rating, reviewCount, featured } = product;
-  const savings = originalPrice ? originalPrice - price : 0;
+  const { _id, images, name, brand, price, mrp, rating, featured, reviewCount } = product;
+  const savings = mrp ? mrp - price : 0;
   const addToCart = useCartStore((state) => state.addToCart);
  return (
-    <Link to={`/products/${id}`} className="group block">
+    <Link to={`/products/${_id}`} className="group block">
       <div className="bg-gradient-to-br from-[var(--card)] to-transparent border border-[var(--border)] rounded-3xl overflow-hidden h-full hover:-translate-y-1 transition-transform duration-300">
         {/* Image Section */}
         <div className="relative bg-[var(--card)]/50 p-4 border-b border-[var(--border)]">
@@ -24,7 +25,7 @@ function ProductCard(product) { // 2. Receive the whole product object as a prop
               </span>
             )}
             <img
-              src={image}
+              src={images[0]}
               alt={name}
               className="w-full h-56 object-cover rounded-2xl"
             />
@@ -49,9 +50,9 @@ function ProductCard(product) { // 2. Receive the whole product object as a prop
               <div className="space-y-1 pt-4">
                 <div className="flex items-center space-x-2">
                   <span className="text-2xl font-bold text-[var(--accent)]">${price.toLocaleString()}</span>
-                  {originalPrice && (
+                  {mrp && (
                     <span className="text-sm text-[var(--foreground-secondary)] line-through">
-                      ${originalPrice.toLocaleString()}
+                      ${mrp.toLocaleString()}
                     </span>
                   )}
                 </div>

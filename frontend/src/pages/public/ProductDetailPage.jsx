@@ -1,37 +1,53 @@
-// src/pages/public/ProductDetailPage.jsx
-
-import React from 'react';
+import React, { useState, useEffect } from 'react'; // 1. Import useState and useEffect
 import { useParams, Link } from 'react-router-dom';
-import { sampleProducts } from '../../data/mockData.js';
-import { Star, Shield, Truck, CreditCard, Minus, Plus, ShoppingCart } from 'lucide-react';
-import useCartStore from '../../state/cartStore'; 
+import { Star, Shield, Truck, Minus, Plus, ShoppingCart } from 'lucide-react';
+import useCartStore from '../../state/cartStore';
 
 function ProductDetailPage() {
   const { productId } = useParams();
   const addToCart = useCartStore((state) => state.addToCart);
   
-  const product = sampleProducts.find(p => p.id === productId);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
-  if (!product) {
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/api/products/${productId}`);
+        if (!response.ok) {
+          throw new Error('Product not found');
+        }
+        const data = await response.json();
+        setProduct(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]); // Re-run if the productId in the URL changes
+
+  if (loading) {
+    return <div className="text-center text-white text-xl py-16">Loading product details...</div>;
+  }
+
+  if (error) {
     return (
       <div className="container mx-auto px-8 py-16 text-center">
-        <h1 className="text-4xl font-bold text-white">Product Not Found</h1>
+        <h1 className="text-4xl font-bold text-red-500">Error: {error}</h1>
         <Link to="/" className="mt-4 inline-block text-lg text-[var(--accent)] hover:underline">
           &larr; Back to all products
         </Link>
       </div>
     );
   }
-    
-  // THIS DUPLICATE BLOCK BELOW WAS THE ERROR AND HAS BEEN REMOVED.
-  // return (
-  //   <div className="container mx-auto px-8 py-16 text-center"> ... </div>
-  // );
 
-  // The function now correctly continues to this main return statement.
+
   return (
     <div className="container mx-auto px-8 py-12">
-      {/* Breadcrumbs */}
       <nav className="text-sm text-[var(--foreground-secondary)] mb-8">
         <Link to="/" className="hover:text-[var(--accent)]">Home</Link>
         <span className="mx-2">&gt;</span>
@@ -39,21 +55,35 @@ function ProductDetailPage() {
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Left Column: Product Image */}
         <div>
           <div className="bg-gradient-to-br from-[var(--card)] to-transparent border border-[var(--border)] rounded-3xl p-8">
-            <img src={product.image} alt={product.name} className="w-full h-auto object-cover rounded-2xl" />
+            <img src={product.images[0] } alt={product.name} className="w-full h-auto object-cover rounded-2xl" />
           </div>
         </div>
 
-        {/* Right Column: Product Details */}
         <div className="space-y-6">
           <div className="space-y-2">
             <span className="text-lg font-semibold text-[var(--accent)]">{product.brand}</span>
             <h1 className="text-4xl font-bold text-white">{product.name}</h1>
             <p className="text-md text-[var(--foreground-secondary)]">Model: {product.model}</p>
           </div>
-          {/* ... Rest of the JSX is the same */}
+
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-1">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className={`h-5 w-5 ${i < Math.round(product.ratings.average) ? 'text-yellow-400 fill-current' : 'text-gray-600'}`} />
+              ))}
+            </div>
+            <span className="text-md text-white">{product.ratings.average} ({product.ratings.count} reviews)</span>
+          </div>
+
+          <div>
+            <span className="text-4xl font-bold text-[var(--accent)]">${product.price.toLocaleString()}</span>
+            {product.mrp && (
+              <span className="text-xl text-[var(--foreground-secondary)] line-through ml-3">${product.mrp.toLocaleString()}</span>
+            )}
+          </div>
+          
           <div className="bg-[var(--card)]/50 border border-[var(--border)] rounded-2xl p-6 space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-lg font-semibold text-white">Quantity</span>

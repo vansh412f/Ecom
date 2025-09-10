@@ -1,10 +1,31 @@
 // src/pages/admin/AdminOrdersPage.jsx
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import useAuthStore from '../../state/authStore';
 import { mockOrders } from '../../data/mockData';
 import { Eye } from 'lucide-react';
 
 function AdminOrdersPage() {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const token = useAuthStore((state) => state.token);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/orders', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await response.json();
+        setOrders(data);
+      } catch (error) {
+        console.error('Failed to fetch orders:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrders();
+  }, [token]);
   const getStatusClass = (status) => {
     switch (status) {
       case 'Shipped':
@@ -17,7 +38,7 @@ function AdminOrdersPage() {
         return 'bg-gray-500/20 text-gray-400';
     }
   };
-
+if (loading) return <p className="text-white">Loading orders...</p>;
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -37,12 +58,12 @@ function AdminOrdersPage() {
             </tr>
           </thead>
           <tbody className="text-white">
-            {mockOrders.map((order) => (
-              <tr key={order.id} className="border-b border-[var(--border)] hover:bg-[var(--border)]/50">
-                <td className="px-6 py-4 font-medium">{order.id}</td>
-                <td className="px-6 py-4 text-[var(--foreground-secondary)]">{order.user}</td>
-                <td className="px-6 py-4 text-[var(--foreground-secondary)]">{order.date}</td>
-                <td className="px-6 py-4 text-right">${order.total.toLocaleString()}</td>
+            {orders.map((order) => (
+              <tr key={order._id}>
+                <td className="px-6 py-4">{order._id}</td>
+                <td className="px-6 py-4">{order.user ? order.user.name : 'N/A'}</td>
+                <td className="px-6 py-4">{new Date(order.createdAt).toLocaleDateString()}</td>
+                <td className="px-6 py-4 text-right">${order.totalPrice.toFixed(2)}</td>
                 <td className="px-6 py-4 text-center">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(order.status)}`}>
                     {order.status}

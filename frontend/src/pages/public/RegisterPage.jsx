@@ -1,10 +1,26 @@
-// src/pages/public/RegisterPage.jsx
-
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Zap, Mail, Lock, User } from 'lucide-react';
+import useAuthStore from '../../state/authStore';
 
 function RegisterPage() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const register = useAuthStore((state) => state.register);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    const success = await register(name, email, password);
+    if (success) {
+      navigate('/'); // Redirect to homepage on successful registration
+    } else {
+      setError('Registration failed. This email may already be in use.');
+    }
+  };
   return (
     <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8 bg-[var(--card)] border border-[var(--border)] rounded-3xl p-10">
@@ -24,66 +40,21 @@ function RegisterPage() {
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6" action="#" method="POST">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4 rounded-md shadow-sm">
             <div>
-              <label htmlFor="full-name" className="sr-only">Full name</label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <User className="h-5 w-5 text-[var(--foreground-secondary)]" aria-hidden="true" />
-                </div>
-                <input
-                  id="full-name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  className="w-full bg-transparent border border-[var(--border)] text-white placeholder:text-[var(--foreground-secondary)] pl-10 pr-4 py-3 rounded-xl focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/50"
-                  placeholder="Full name"
-                />
-              </div>
+              <input id="full-name" name="name" type="text" value={name} onChange={(e) => setName(e.target.value)} required className="w-full bg-transparent border border-[var(--border)] text-white placeholder:text-[var(--foreground-secondary)] pl-4 pr-4 py-3 rounded-xl" placeholder="Full name" />
             </div>
             <div>
-              <label htmlFor="email-address" className="sr-only">Email address</label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Mail className="h-5 w-5 text-[var(--foreground-secondary)]" aria-hidden="true" />
-                </div>
-                <input
-                  id="email-address"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="w-full bg-transparent border border-[var(--border)] text-white placeholder:text-[var(--foreground-secondary)] pl-10 pr-4 py-3 rounded-xl focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/50"
-                  placeholder="Email address"
-                />
-              </div>
+              <input id="email-address" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full bg-transparent border border-[var(--border)] text-white placeholder:text-[var(--foreground-secondary)] pl-4 pr-4 py-3 rounded-xl" placeholder="Email address" />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">Password</label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Lock className="h-5 w-5 text-[var(--foreground-secondary)]" aria-hidden="true" />
-                </div>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  className="w-full bg-transparent border border-[var(--border)] text-white placeholder:text-[var(--foreground-secondary)] pl-10 pr-4 py-3 rounded-xl focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/50"
-                  placeholder="Password"
-                />
-              </div>
+              <input id="password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full bg-transparent border border-[var(--border)] text-white placeholder:text-[var(--foreground-secondary)] pl-4 pr-4 py-3 rounded-xl" placeholder="Password" />
             </div>
           </div>
-
+          {error && <p className="text-sm text-red-500 text-center">{error}</p>}
           <div>
-            <button
-              type="submit"
-              className="group relative flex w-full justify-center rounded-xl border border-transparent bg-[var(--accent)] py-3 px-4 text-lg font-semibold text-[var(--accent-foreground)] hover:bg-[var(--accent)]/90 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 focus:ring-offset-gray-800"
-            >
+            <button type="submit" className="group relative flex w-full justify-center rounded-xl border border-transparent bg-[var(--accent)] py-3 px-4 text-lg font-semibold text-[var(--accent-foreground)] hover:bg-[var(--accent)]/90">
               Create Account
             </button>
           </div>

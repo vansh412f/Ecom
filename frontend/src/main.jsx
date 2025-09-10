@@ -15,6 +15,12 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminProductsPage from './pages/admin/AdminProductsPage';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 import WishlistPage from './pages/public/WishlistPage'; 
+import CheckoutPage from './pages/public/CheckoutPage'; 
+import OrderHistoryPage from './pages/user/OrderHistoryPage';
+import CustomerProtectedRoute from './routes/CustomerProtectedRoute'; 
+
+import AdminEditProductPage from './pages/admin/AdminEditProductPage'; 
+import AdminAddProductPage from './pages/admin/AdminAddProductPage';
 
 
 const router = createBrowserRouter([
@@ -29,6 +35,14 @@ const router = createBrowserRouter([
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
       { path: 'wishlist', element: <WishlistPage /> },
+      { 
+        element: <CustomerProtectedRoute />,
+        children: [
+          { path: 'checkout', element: <CheckoutPage /> },
+          { path: 'profile/orders', element: <OrderHistoryPage /> },
+          // Any other customer-only pages will go here
+        ]
+      }
     ],
   },
   // Admin Routes
@@ -42,6 +56,8 @@ const router = createBrowserRouter([
           { index: true, element: <AdminDashboard /> },
           { path: 'orders', element: <AdminOrdersPage /> },
           { path: 'products', element: <AdminProductsPage /> },
+          { path: 'products/add', element: <AdminAddProductPage /> },
+          { path: 'products/:productId/edit', element: <AdminEditProductPage /> },
         ],
       },
     ],

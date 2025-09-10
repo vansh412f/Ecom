@@ -89,12 +89,14 @@ const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
           <div className="flex items-center space-x-4">
               
               {/* --- THIS IS THE CORRECTED SECTION --- */}
-     w       {isLoggedIn ? (
+           {isLoggedIn ? (
               <>
                 <span className="text-white hidden md:block">Welcome, {user?.name}</span>
-                <button onClick={handleLogout} className="p-2 rounded-full text-white hover:text-[var(--accent)] hover:bg-[var(--card)]">
-                  <LogOut className="h-6 w-6" />
-                </button>
+      <Link to="/profile/orders" className="text-sm text-gray-300 hover:text-white">My Orders</Link>
+      <button onClick={handleLogout} className="p-2 ...">
+        <LogOut className="h-6 w-6" />
+      </button>
+
               </>
             ) : (
               <>

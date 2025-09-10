@@ -6,7 +6,7 @@ const useAuthStore = create((set) => ({
   // --- STATE ---
   isLoggedIn: false,
   user: null,
-
+token: null,
   // --- ACTIONS ---
 
   /**
@@ -14,32 +14,55 @@ const useAuthStore = create((set) => ({
    * On success, updates state and returns the user object.
    * On failure, returns null.
    */
-  login: (email, password) => {
-    // In a real app, this would be an API call.
-    if (email === 'user@wowcart.com' && password === 'password123') {
-      const mockUser = {
-        name: 'John Doe',
-        email: email,
-        role: 'admin', // Add the user role
-      };
-      set({ isLoggedIn: true, user: mockUser });
-      return mockUser; // Return the user object
+  register: async (name, email, password) => {
+    try {
+      const response = await fetch('http://localhost:8000/api/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to register');
+      }
+
+      const data = await response.json();
+      set({ isLoggedIn: true, user: data, token: data.token });
+      localStorage.setItem('userInfo', JSON.stringify(data)); // Save user info to local storage
+      return true; // Indicate success
+    } catch (error) {
+      console.error(error);
+      return false; // Indicate failure
     }
-    // Add a mock for a regular customer
-    if (email === 'customer@wowcart.com' && password === 'password123') {
-      const mockUser = {
-        name: 'Jane Smith',
-        email: email,
-        role: 'customer', // Add the user role
-      };
-      set({ isLoggedIn: true, user: mockUser });
-      return mockUser; // Return the user object
+  },
+
+  login: async (email, password) => {
+    try {
+      const response = await fetch('http://localhost:8000/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to login');
+      }
+
+      const data = await response.json();
+      set({ isLoggedIn: true, user: data, token: data.token });
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      return data; // Return the user object on success
+    } catch (error) {
+      console.error(error);
+      return null; // Return null on failure
     }
-    return null; // Return null on failure
   },
 
   logout: () => {
-    set({ isLoggedIn: false, user: null });
+    set({ isLoggedIn: false, user: null, token: null });
+    localStorage.removeItem('userInfo');
   },
 }));
 

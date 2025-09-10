@@ -32,7 +32,7 @@ function ProductGrid({ products }) {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {products.map((product) => (
           <ProductCard
-            key={product.id}
+            key={product._id}
             {...product} // Pass all product data as props to the card
           />
         ))}

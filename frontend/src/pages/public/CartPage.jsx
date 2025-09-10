@@ -63,9 +63,9 @@ function CartPage() {
               <span>${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
           </div>
-          <button className="w-full mt-8 bg-[var(--accent)] text-[var(--accent-foreground)] font-bold py-4 rounded-xl text-lg hover:bg-[var(--accent)]/90">
+          <Link to="/checkout" className="block text-center w-full mt-8 bg-[var(--accent)] text-[var(--accent-foreground)] font-bold py-4 rounded-xl text-lg hover:bg-[var(--accent)]/90">
             Proceed to Checkout
-          </button>
+          </Link>
         </div>
       </div>
     </div>
