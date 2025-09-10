@@ -13,6 +13,7 @@ const productSchema = new mongoose.Schema(
     mrp: { type: Number },
     category: { type: String, required: true },
     stock: { type: Number, required: true, default: 0 },
+    image: ,
     images: [{ type: String }], // Array of image URLs
     tags: [{ type: String }],
     specifications: [
@@ -28,7 +29,6 @@ const productSchema = new mongoose.Schema(
     isFeatured: { type: Boolean, default: false },
   },
   {
-    // Mongoose option to automatically add createdAt and updatedAt timestamps
     timestamps: true,
   }
 );
