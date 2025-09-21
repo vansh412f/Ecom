@@ -69,7 +69,6 @@ function HomePage() {
   }, []);
 
   // Re-fetch products when filters change
-  // Re-fetch products when filters change
   useEffect(() => {
     const fetchFilteredProducts = async () => {
       try {
@@ -80,9 +79,6 @@ function HomePage() {
         }
         if (selectedFilters.brands.length > 0) {
           queryParams.append('brand', selectedFilters.brands.join(','));
-        }
-        if (selectedFilters.sort) {
-          queryParams.append('sort', selectedFilters.sort);
         }
         const response = await fetch(`http://localhost:8000/api/products?${queryParams}`);
         if (!response.ok) {
