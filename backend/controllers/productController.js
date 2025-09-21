@@ -10,24 +10,24 @@ import Product from '../models/Product.js';
 // Inside getAllProducts function
 const getAllProducts = async (req, res) => {
   try {
-    // Check if a 'category' query parameter exists
-    const keyword = req.query.category
-      ? {
-          category: {
-            $regex: req.query.category, // Use regex for flexible matching
-            $options: 'i', // 'i' for case-insensitive
-          },
-        }
-      : {}; // If no category, the keyword is an empty object
+    // Build query object based on category and brand parameters
+    const query = {};
+    if (req.query.category) {
+      query.category = { $regex: req.query.category, $options: 'i' };
+    }
+    if (req.query.brand) {
+      query.brand = { $regex: req.query.brand, $options: 'i' };
+    }
 
-    // Pass the keyword object to the find method
-    const products = await Product.find({ ...keyword });
+    // Fetch products with the dynamic query
+    const products = await Product.find(query);
     res.json(products);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
 /**
  * @desc    Fetch a single product by ID
  * @route   GET /api/products/:id
@@ -47,6 +47,7 @@ const getProductById = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
 /**
  * @desc    Create a new product
  * @route   POST /api/products
@@ -54,7 +55,6 @@ const getProductById = async (req, res) => {
  */
 const createProduct = async (req, res) => {
   try {
-    // We get the product data from the request body
     const { name, slug, brand, model, description, price, mrp, category, stock, images, tags, specifications, isFeatured } = req.body;
 
     const product = new Product({
@@ -102,7 +102,10 @@ const updateProduct = async (req, res) => {
       product.mrp = mrp || product.mrp;
       product.category = category || product.category;
       product.stock = stock || product.stock;
-      //... and so on for other fields
+      product.images = images || product.images;
+      product.tags = tags || product.tags;
+      product.specifications = specifications || product.specifications;
+      product.isFeatured = isFeatured !== undefined ? isFeatured : product.isFeatured;
 
       const updatedProduct = await product.save();
       res.json(updatedProduct);
@@ -135,6 +138,5 @@ const deleteProduct = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
-
 
 export { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct };
