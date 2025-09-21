@@ -10,7 +10,7 @@ function RootLayout() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow">
-        <Outlet /> {/* Page content will be rendered here */}
+        <Outlet /> 
       </main>
       <Footer />
     </div>

@@ -30,7 +30,7 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { index: true, element: <HomePage /> },
-  { path: 'category/:categoryName', element: <CategoryPage /> }, // ADD THIS NEW ROUTE
+  { path: 'category/:categoryName', element: <CategoryPage /> }, 
   { path: 'products/:productId', element: <ProductDetailPage /> },
       { path: 'cart', element: <CartPage /> },
       { path: 'login', element: <LoginPage /> },

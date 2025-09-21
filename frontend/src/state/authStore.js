@@ -1,5 +1,3 @@
-// src/state/authStore.js
-
 import { create } from 'zustand';
 
 const useAuthStore = create((set) => ({

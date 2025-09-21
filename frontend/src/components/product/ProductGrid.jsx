@@ -4,7 +4,7 @@ import React from 'react';
 import ProductCard from './ProductCard.jsx';
 import { ArrowUpDown } from 'lucide-react';
 
-function ProductGrid({ products }) {
+function ProductGrid({ products, currentSort, onSortChange }) {
   return (
     <div className="flex-1">
       {/* Header */}
@@ -19,11 +19,14 @@ function ProductGrid({ products }) {
         </div>
         <div className="flex items-center space-x-3">
           <ArrowUpDown className="h-5 w-5 text-[var(--foreground-secondary)]" />
-          <select className="w-52 bg-[var(--card)] border border-[var(--border)] text-white rounded-xl h-12 px-4 focus:border-[var(--accent)] focus:ring-0">
-            <option>Featured Products</option>
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
-            <option>Customer Rating</option>
+          <select 
+            className="w-52 bg-[var(--card)] border border-[var(--border)] text-white rounded-xl h-12 px-4 focus:border-[var(--accent)] focus:ring-0"
+            value={currentSort}
+            onChange={(e) => onSortChange('sort', e.target.value)}
+          >
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Customer Rating</option>
           </select>
         </div>
       </div>
